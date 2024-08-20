@@ -1,6 +1,6 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import CreateCabinForm from "./CreateCabinForm";
 import {
   HiDocumentDuplicate,
   HiPencilSquare,
@@ -46,17 +46,10 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-import React, { useState } from "react";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { useDeleteCabin } from "./useDeleteCabin";
+import { deleteCabin } from "../../services/apiCabins";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CabinRow = ({ cabin }) => {
-  const [showForm, setShowForm] = useState(false);
-  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   const {
     id: cabinId,
@@ -66,6 +59,20 @@ const CabinRow = ({ cabin }) => {
     discount,
     image,
   } = cabin;
+
+  const queryClient = useQueryClient()
+
+  const {isLoading: isDeleting, mutate} = useMutation({
+    // mutationFn: (id) => deleteCabin(id),
+    mutationFn: deleteCabin,
+    onSuccess:()=>{
+      alert("Cabin successfully deleted")
+      queryClient.invalidateQueries({
+        queryKey: ["cabins"]
+      })
+    },
+    onError: (error) => alert(error.message) 
+  })
 
   return (
     <>
@@ -83,15 +90,14 @@ const CabinRow = ({ cabin }) => {
           <button>
             <HiDocumentDuplicate />
           </button>
-          <button onClick={() => setShowForm((show) => !show)}>
+          <button>
             <HiPencilSquare />
           </button>
-          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
-            <HiArchiveBoxXMark />
+          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+            <HiArchiveBoxXMark />Delete
           </button>
         </div>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 };
