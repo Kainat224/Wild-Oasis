@@ -49,9 +49,11 @@ const Discount = styled.div`
 import { deleteCabin } from "../../services/apiCabins";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import CreateCabinForm from "./CreateCabinForm";
 
 const CabinRow = ({ cabin }) => {
-
+  const [showForm, setShowForm] = useState(false)
   const {
     id: cabinId,
     name,
@@ -91,7 +93,7 @@ const CabinRow = ({ cabin }) => {
           <button>
             <HiDocumentDuplicate />
           </button>
-          <button>
+          <button onClick={()=>setShowForm((show)=> !show)}>
             <HiPencilSquare />
           </button>
           <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
@@ -99,6 +101,7 @@ const CabinRow = ({ cabin }) => {
           </button>
         </div>
       </TableRow>
+      {showForm && <CreateCabinForm cabinToEdit={cabin}/>}
     </>
   );
 };
