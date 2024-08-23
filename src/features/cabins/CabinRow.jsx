@@ -49,10 +49,12 @@ const Discount = styled.div`
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import { useDeleteCabin } from "./useDeleteCabin";
+import { useCreateCabin } from "./useCreateCabin";
 
 const CabinRow = ({ cabin }) => {
   const [showForm, setShowForm] = useState(false);
   const { isDeleting, deleteCabin } = useDeleteCabin();
+  const {isCreating, createCabin} = useCreateCabin();
 
   const {
     id: cabinId,
@@ -61,7 +63,20 @@ const CabinRow = ({ cabin }) => {
     regularPrice,
     discount,
     image,
+    description
   } = cabin;
+
+  function handleDuplicate(){
+    createCabin({
+      name: `Copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description
+    })
+  }
+
 
   return (
     <>
@@ -76,7 +91,7 @@ const CabinRow = ({ cabin }) => {
           <span>&mdash;</span>
         )}
         <div>
-          <button>
+          <button disabled={isCreating} onClick={handleDuplicate}>
             <HiDocumentDuplicate />
           </button>
           <button onClick={()=>setShowForm((show)=> !show)}>
