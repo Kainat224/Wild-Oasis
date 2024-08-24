@@ -1,4 +1,8 @@
+import { cloneElement, createContext, useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -48,3 +52,54 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+// Create the context
+const ModalContext = createContext();
+
+// Modal component to provide context
+const Modal = ({ children }) => {
+  const [openName, setOpenName] = useState('');
+
+  const close = () => setOpenName('');
+  const open = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ openName, close, open }}>
+      {children}
+    </ModalContext.Provider>
+  );
+};
+
+// Open component to handle opening modals
+const Open = ({ children, opens: opensWindowName }) => {
+  const { open } = useContext(ModalContext);  // Correctly destructure context
+
+  return cloneElement(children, { onClick: () => open(opensWindowName) });
+};
+
+// Window component to display modal
+const Window = ({ children, name }) => {
+  const { openName, close } = useContext(ModalContext);  // Correctly destructure context
+  const ref = useOutsideClick(close)
+
+  if (name !== openName) return null;
+  
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        <Button onClick={close}>
+          <HiXMark />
+        </Button>
+        {children}
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+};
+
+// Assign Open and Window as subcomponents of Modal
+Modal.Open = Open;
+Modal.Window = Window;
+
+// Export the main Modal component, not Window
+export default Modal;
