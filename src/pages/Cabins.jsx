@@ -6,6 +6,7 @@ import Button from "../ui/Button";
 import { useEffect, useState } from "react";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
 import AddCabin from "../features/cabins/AddCabin";
+import CabinTableOperations from "../features/cabins/CabinTableOperations";
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
 
@@ -35,7 +36,7 @@ function Cabins() {
     <>
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
-        <p>Filter / Sort</p>
+        <CabinTableOperations />
       </Row>
 
       <Row>
