@@ -8,7 +8,7 @@ const SortBy = ({options, type='white'}) => {
     function handleChange(e){
         searchParams.set('sortBy', e.target.value);
         setSearchParams(searchParams)
-    }
+    } 
 
   return (
     <Select options={options} type="white" onChange={handleChange} value={sortBy} />
