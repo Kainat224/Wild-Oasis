@@ -12,6 +12,7 @@ export function useLogin(){
             loginApi({email, password})
         },
         onSuccess: (user)=>{
+            // Correct on => queryClient.setQueryData(['user'], user.user)
             queryClient.setQueriesData(['user'], user)
             navigate("/dashboard", { replace: true })
         },
