@@ -8,7 +8,7 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import Account from "./pages/Account";
 import Login from "./pages/Login";
-import Pagenotfound from "./pages/Pagenotfound";
+import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./ui/AppLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -52,7 +52,7 @@ const App = () => {
             </Route>
 
             <Route path="login" element={<Login />} />
-            <Route path="pagenotfound" element={<Pagenotfound />} />
+            <Route path="pagenotfound" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
         <Toaster
