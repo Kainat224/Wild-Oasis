@@ -75,35 +75,37 @@ const Menus = ({ children }) => {
   const open = setOpenId;
 
   return (
-    <MenusContext.Provider value={{openId, close, open, position, setPosition}}>{children}</MenusContext.Provider>
+    <MenusContext.Provider value={{ openId, close, open, position, setPosition }}>{children}</MenusContext.Provider>
   )
 }
 
 const Toggle = ({ id }) => {
   const { openId, open, close, setPosition } = useContext(MenusContext)
 
-  function handleClick(e){
+  function handleClick(e) {
+    e.stopPropagation()
     const rect = e.target.closest('button').getBoundingClientRect();
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8
     })
-    
+
     openId === '' || openId !== id ? open(id) : close()
   }
 
   return (
     <StyledToggle onClick={handleClick}>
-      <HiEllipsisVertical/>
+      <HiEllipsisVertical />
     </StyledToggle>
   )
 }
 
 const List = ({ id, children }) => {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick(close)
+  const ref = useOutsideClick(close, false)
+  // const ref = useOutsideClick(() => { close() }, false)
 
-  if(openId !== id) return null;
+  if (openId !== id) return null;
 
   return createPortal(
     <StyledList position={position} ref={ref}>{children}</StyledList>,
@@ -112,9 +114,9 @@ const List = ({ id, children }) => {
 }
 
 const Button = ({ children, icon, onClick }) => {
-  const {close} = useContext(MenusContext)
-  
-  function handleClick(){
+  const { close } = useContext(MenusContext)
+
+  function handleClick() {
     onClick?.();
     close();
   }
